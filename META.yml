@@ -1,0 +1,32 @@
+---
+name: Objects-Collection
+version: 0.27
+author:
+  - Zahatski Aliaksandr zag@cpan.org
+abstract: abstract class for collections of data.
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+provides:
+  Objects::Collection:
+    file: lib/Objects/Collection.pm
+    version: 0.27
+  Objects::Collection::ActiveRecord:
+    file: lib/Objects/Collection/ActiveRecord.pm
+    version: 0.01
+  Objects::Collection::AutoSQL:
+    file: lib/Objects/Collection/AutoSQL.pm
+    version: 0.01
+  Objects::Collection::AutoSQLnotUnique:
+    file: lib/Objects/Collection/AutoSQLnotUnique.pm
+    version: 0.01
+  Objects::Collection::Base:
+    file: lib/Objects/Collection/Base.pm
+    version: 0.01
+  Objects::Collection::Item:
+    file: lib/Objects/Collection/Item.pm
+    version: 0.02
+generated_by: Module::Build version 0.2805
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2
