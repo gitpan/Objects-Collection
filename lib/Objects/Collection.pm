@@ -28,7 +28,7 @@ use Data::Dumper;
 use Objects::Collection::ActiveRecord;
 use Objects::Collection::Base;
 @Objects::Collection::ISA = qw(Objects::Collection::Base);
-$Objects::Collection::VERSION = '0.27';
+$Objects::Collection::VERSION = '0.28';
 attributes qw( _obj_cache );
 
 sub _init {
