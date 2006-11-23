@@ -43,7 +43,7 @@ For exampe:
   dbh     => $dbh,          #database connect
   table   => 'beers',       #table name
   field   => 'bid',         #key field (IDs), usually primary,autoincrement
-  cut_key => 1;             #delete field mid from readed records,
+  cut_key => 1;             #delete field 'bid' from readed records,
 
 
  my $heineken = $beers->fetch_object(1);
@@ -104,7 +104,7 @@ use Objects::Collection;
 use Objects::Collection::Base;
 use Objects::Collection::ActiveRecord;
 @Objects::Collection::AutoSQL::ISA = qw(Objects::Collection);
-$Objects::Collection::AutoSQL::VERSION = '0.01';
+$Objects::Collection::AutoSQL::VERSION = '0.02';
 attributes qw( _dbh _table_name _key_field _is_delete_key_field _sub_ref);
 
 sub _init {
