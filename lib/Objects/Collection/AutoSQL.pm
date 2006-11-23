@@ -1,6 +1,5 @@
 package Objects::Collection::AutoSQL;
 
-=pod
 
 =head1 NAME
 

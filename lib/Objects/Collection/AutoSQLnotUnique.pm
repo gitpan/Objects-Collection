@@ -1,6 +1,5 @@
 package Objects::Collection::AutoSQLnotUnique;
 
-=pod
 
 =head1 NAME
 

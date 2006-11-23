@@ -1,9 +1,8 @@
 package Objects::Collection::ActiveRecord;
-=pod
 
 =head1 NAME
 
- Objects::Collection::AutoSQL - class for collections of data, stored in database.
+ Objects::Collection::ActiveRecord -  Tools for track changes in HASHes.
 
 =head1 SYNOPSIS
 

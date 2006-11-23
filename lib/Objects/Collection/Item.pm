@@ -1,6 +1,5 @@
 package Objects::Collection::Item;
 
-=pod
 
 =head1 NAME
 

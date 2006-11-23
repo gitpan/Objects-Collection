@@ -2,8 +2,6 @@ package Objects::Collection;
 
 #$Id: Collection.pm,v 1.6 2006/04/27 14:56:19 zag Exp $
 
-=pod
-
 =head1 NAME
 
 Objects::Collection - abstract class for collections of data.
@@ -28,7 +26,7 @@ use Data::Dumper;
 use Objects::Collection::ActiveRecord;
 use Objects::Collection::Base;
 @Objects::Collection::ISA = qw(Objects::Collection::Base);
-$Objects::Collection::VERSION = '0.28';
+$Objects::Collection::VERSION = '0.29';
 attributes qw( _obj_cache );
 
 sub _init {

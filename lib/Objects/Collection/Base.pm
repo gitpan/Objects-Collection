@@ -2,6 +2,24 @@ package Objects::Collection::Base;
 
 #$Id: Base.pm,v 1.3 2006/04/27 14:56:19 zag Exp $
 
+=head1 NAME
+
+ Objects::Collection::Base - abstract class.
+
+=head1 SYNOPSIS
+
+    use Objects::Collection::Base;
+    @Objects::Collection::ISA = qw(Objects::Collection::Base);
+
+=head1 DESCRIPTION
+
+Abstract class.
+
+=head1 METHODS
+
+=cut
+
+
 use strict;
 use warnings;
 use strict;
@@ -59,48 +77,22 @@ sub _init {
 
 1;
 __END__
-# Below is stub documentation for your module. You'd better edit it!
-
-=head1 NAME
-
-Objects::Collection - Perl extension for blah blah blah
-
-=head1 SYNOPSIS
-
-  use Objects::Collection;
-  blah blah blah
-
-=head1 DESCRIPTION
-
-Stub documentation for Objects::Collection, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
-
-Blah blah blah.
 
 
 =head1 SEE ALSO
 
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
-
-If you have a mailing list set up for your module, mention it here.
-
-If you have a web site set up for your module, mention it here.
+Objects::Collection, README
 
 =head1 AUTHOR
 
-Zagatski Alexandr, E<lt>zag@zagE<gt>
+Zahatski Aliaksandr, <zag@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2005 by Zagatski Alexandr
+Copyright (C) 2005-2006 by Zahatski Aliaksandr
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.8.7 or,
+it under the same terms as Perl itself, either Perl version 5.8.8 or,
 at your option, any later version of Perl 5 you may have available.
-
 
 =cut
