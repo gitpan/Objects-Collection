@@ -137,13 +137,6 @@ sub _store {
         }
    }
 }
-sub _prepare_record {
-    my ( $self, $key, $ref ) = @_;
-    if ( ref($self->_sub_ref) eq 'CODE') {
-       return $self->_sub_ref()->($key,$ref)
-    }
-    return $ref
-}
 
 1;
 

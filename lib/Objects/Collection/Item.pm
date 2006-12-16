@@ -3,7 +3,7 @@ package Objects::Collection::Item;
 
 =head1 NAME
 
- Objects::Collection::Item - Base class for objects.
+Objects::Collection::Item - Base class for objects.
 
 =head1 SYNOPSIS
 
