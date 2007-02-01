@@ -5,3 +5,5 @@ Revision history for Perl extension Objects::Collection.
 		-AXc --skip-exporter Object::Collection
 0.30  23/12/2006
         - fix pods
+0.32  22/01/2007
+       - AutoSQL::fetch_object - support query

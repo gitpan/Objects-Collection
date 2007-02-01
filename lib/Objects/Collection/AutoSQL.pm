@@ -280,6 +280,13 @@ sub _prepare_record {
     return \%hash;
 }
 
+# overlap for support get by query
+sub fetch_object {
+    my $self = shift;
+    my ($obj) = values %{ $self->fetch_objects(@_) };
+    $obj;
+}
+
 sub GetLastID {
     my $self       = shift;
     my $table_name = $self->_table_name();
