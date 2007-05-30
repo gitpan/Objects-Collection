@@ -4,7 +4,7 @@ package Objects::Collection;
 
 =head1 NAME
 
-Objects::Collection - abstract class for collections of data.
+Objects::Collection - Collections of data or objects.
 
 =head1 SYNOPSIS
 
@@ -25,8 +25,9 @@ use Carp;
 use Data::Dumper;
 use Objects::Collection::ActiveRecord;
 use Objects::Collection::Base;
+use Objects::Collection::LazyObject;
 @Objects::Collection::ISA = qw(Objects::Collection::Base);
-$Objects::Collection::VERSION = '0.32';
+$Objects::Collection::VERSION = '0.33';
 attributes qw( _obj_cache );
 
 sub _init {
@@ -271,7 +272,7 @@ Not really return lazy object.
 =cut
 sub get_lazy_object {
     my ( $self, $id ) = @_;
-    return $self->fetch_object($id);
+    return new Objects::Collection::LazyObject:: sub {$self->fetch_object($id)};
 }
 
 
@@ -289,7 +290,7 @@ Zahatski Aliaksandr, <zag@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2005-2006 by Zahatski Aliaksandr
+Copyright (C) 2005-2007 by Zahatski Aliaksandr
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.8 or,

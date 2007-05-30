@@ -70,7 +70,7 @@ For exampe:
  #UPDATE beers SET bcount='2',bname='heineken' where bid=1
  #UPDATE beers SET bcount='4',bname='karhu' where bid=5
 
- my $hash1 = $beers->fetch_objects({bcount=>[4,1]});
+ my $hash = $beers->fetch_objects({bcount=>[4,1]});
  #SELECT * FROM beers WHERE  ( bcount in (4,1) )
  
  print Dumper($hash);
@@ -309,7 +309,7 @@ Zahatski Aliaksandr, <zag@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2005-2006 by Zahatski Aliaksandr
+Copyright (C) 2005-2007 by Zahatski Aliaksandr
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.8 or,

@@ -7,3 +7,6 @@ Revision history for Perl extension Objects::Collection.
         - fix pods
 0.32  22/01/2007
        - AutoSQL::fetch_object - support query
+0.33  
+        - add LazyLoad support
+        - add UnionHash
