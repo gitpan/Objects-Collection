@@ -1,6 +1,5 @@
 package Objects::Collection::AutoSQL;
 
-
 =head1 NAME
 
  Objects::Collection::AutoSQL - class for collections of data, stored in database.
@@ -103,18 +102,18 @@ use Carp;
 use Objects::Collection;
 use Objects::Collection::Base;
 use Objects::Collection::ActiveRecord;
-@Objects::Collection::AutoSQL::ISA = qw(Objects::Collection);
+@Objects::Collection::AutoSQL::ISA     = qw(Objects::Collection);
 $Objects::Collection::AutoSQL::VERSION = '0.02';
 attributes qw( _dbh _table_name _key_field _is_delete_key_field _sub_ref);
 
 sub _init {
     my $self = shift;
-    my %arg = @_;
+    my %arg  = @_;
     $self->_dbh( $arg{dbh} );
     $self->_table_name( $arg{table} );
     $self->_key_field( $arg{field} );
     $self->_is_delete_key_field( $arg{delete_key} || $arg{cut_key} );
-    $self->_sub_ref($arg{sub_ref});
+    $self->_sub_ref( $arg{sub_ref} );
     $self->SUPER::_init(@_);
 }
 
@@ -123,6 +122,7 @@ sub _init {
  Return current $dbh.
 
 =cut
+
 sub get_dbh {
     return $_[0]->_dbh;
 }
@@ -134,56 +134,62 @@ Return ref to ARRAY of readed IDs.
 =cut
 
 sub get_ids_where {
-    my $self = shift;
-    my $where = shift || return [];
+    my $self       = shift;
+    my $where      = shift || return [];
     my $dbh        = $self->_dbh();
     my $table_name = $self->_table_name();
     my $field      = $self->_key_field;
     my $query      = "SELECT $field FROM $table_name WHERE $where";
-    return ($dbh->selectcol_arrayref($query) || [] );
+    return ( $dbh->selectcol_arrayref($query) || [] );
 }
 
 sub after_load {
     my $self = shift;
-    return $_[0]
+    return $_[0];
 }
 
 sub before_save {
     my $self = shift;
-    return $_[0]
+    return $_[0];
 }
 
 sub _query_dbh {
-    my $self = shift;
+    my $self  = shift;
     my $query = shift;
-    my $dbh = $self->_dbh;
-    my $sth = $dbh->prepare($query) or croak $dbh::errstr;
-    $sth->execute or croak $dbh::errstr."\nSQL: $query";
-    return $sth
+    my $dbh   = $self->_dbh;
+    my $sth   = $dbh->prepare($query) or croak $dbh::errstr;
+    $sth->execute or croak $dbh::errstr. "\nSQL: $query";
+    return $sth;
 }
+
 sub _store {
     my ( $self, $ref ) = @_;
     my $dbh        = $self->_dbh();
     my $table_name = $self->_table_name();
     my $field      = $self->_key_field;
     while ( my ( $key, $rec_ref ) = each %$ref ) {
-        my $tmp_val = ref($rec_ref) eq 'HASH' ? $rec_ref : $rec_ref->_get_attr;
+        my $tmp_val  = ref($rec_ref) eq 'HASH' ? $rec_ref : $rec_ref->_get_attr;
         my $prepared = $self->before_save($tmp_val);
-        my @rows = ref($prepared) eq 'ARRAY' ? @$prepared : ($prepared);
-        foreach my $val ( @rows ) {
-         my @records =
-          map { [ $_, $dbh->quote( $val->{$_} ? $val->{$_} : '' ) ] }
-          keys %$val;
-         my $query = "UPDATE $table_name SET " . join( ",", map { qq!$_->[0]=$_->[1]! } @records ) . " where $field=$key";
-         $self->_query_dbh($query);
-        } #foreach
+        my @rows     = ref($prepared) eq 'ARRAY' ? @$prepared : ($prepared);
+        foreach my $val (@rows) {
+            my @records =
+              map {
+                [ $_, $dbh->quote( defined( $val->{$_} ) ? $val->{$_} : '' ) ]
+              }
+              keys %$val;
+            my $query =
+                "UPDATE $table_name SET "
+              . join( ",", map { qq!$_->[0]=$_->[1]! } @records )
+              . " where $field=$key";
+            $self->_query_dbh($query);
+        }    #foreach
     }    #while
 }
 
 sub _prepare_where {
-    my $self = shift;
-    my $dbh        = $self->_dbh();
-    my $field      = $self->_key_field;
+    my $self  = shift;
+    my $dbh   = $self->_dbh();
+    my $field = $self->_key_field;
     my @extra_id;
     my @docs;
     foreach (@_) {
@@ -196,17 +202,24 @@ sub _prepare_where {
 
     }
     my @add_where;
-    push @add_where,"$field in (" . join( "," => @docs ) . ")" if @docs;
+    push @add_where, "$field in (" . join( "," => @docs ) . ")" if @docs;
     foreach my $exp (@extra_id) {
         my @and_where;
         while ( my ( $key, $val ) = each %$exp ) {
-          my $vals = join ",", map { /^\d+$/ ? $_ : $dbh->quote($_) } ( ref($val) ? @$val : ($val) );
-          push @and_where, qq!$key in ($vals)!;
+            my $vals = join ",",
+              map { /^\d+$/ ? $_ : $dbh->quote($_) }
+              ( ref($val) ? @$val : ($val) );
+            if ( $key =~ s%([<>])%% ) {
+                push @and_where, qq!$key $1 $vals!;
+            }
+            else {
+                push @and_where, qq!$key in ($vals)!;
+            }
         }
         push @add_where, " ( " . join( " and ", @and_where ) . " ) ";
     }
     my $extr_where = join " or ", @add_where if @add_where;
-    return $extr_where
+    return $extr_where;
 }
 
 sub _fetch {
@@ -214,17 +227,18 @@ sub _fetch {
     my $dbh        = $self->_dbh();
     my $table_name = $self->_table_name();
     my $field      = $self->_key_field;
-    my $where = $self->_prepare_where(@_);
+    my $where      = $self->_prepare_where(@_);
     return {} unless $where;
-    my $str ="SELECT * FROM $table_name WHERE $where";
+    my $str    = "SELECT * FROM $table_name WHERE $where";
     my $result = {};
     my %keys_hash;
     my $qrt = $self->_query_dbh($str);
+
     while ( my $rec = $qrt->fetchrow_hashref ) {
         my %hash = %$rec;
-        my $id = $hash{$field};
+        my $id   = $hash{$field};
         delete $hash{$field} if $self->_is_delete_key_field;
-        $result->{$id} = $self->after_load(\%hash);
+        $result->{$id} = $self->after_load( \%hash );
     }
     $qrt->finish;
     return $result;
@@ -237,16 +251,23 @@ sub _create {
     my $field = $self->_key_field;
     if ( $self->_is_delete_key_field ) {
         $id = $arg{$field};
-        delete $arg{$field} 
+        delete $arg{$field};
     }
-    my @keys       = keys %arg;
-    my $str        = "INSERT INTO  $table_name (" . join( ",", @keys ) . ") VALUES (" . join( ",", map { $self->_dbh()->quote( $_ ? $_ : '' ) } map { $arg{$_} } @keys ) . ")";
+    my @keys = keys %arg;
+    my $str = "INSERT INTO  $table_name (" . join( ",", @keys ) . ") VALUES ("
+      . join( ",",
+        map { $self->_dbh()->quote( defined($_) ? $_ : '' ) }
+          map { $arg{$_} } @keys )
+      . ")";
     $self->_query_dbh($str);
     my $inserted_id;
-    if ( ! $self->_is_delete_key_field && exists $arg{$field}) {
+    if ( !$self->_is_delete_key_field && exists $arg{$field} ) {
         $inserted_id = $arg{$field};
-    } else {
-        $inserted_id = $self->_dbh->last_insert_id('','', $table_name, $field)  || $self->GetLastID();
+    }
+    else {
+        $inserted_id =
+             $self->_dbh->last_insert_id( '', '', $table_name, $field )
+          || $self->GetLastID();
     }
     return { $inserted_id => $self->fetch_object($inserted_id) };
 }
@@ -256,7 +277,9 @@ sub _delete {
     my $table_name = $self->_table_name();
     my $field      = $self->_key_field;
     return [] unless scalar @_;
-    my $str        = "DELETE FROM $table_name WHERE $field IN (" . join( ",", map { $_->{id} } @_ ) . ")";
+    my $str =
+      "DELETE FROM $table_name WHERE $field IN ("
+      . join( ",", map { $_->{id} } @_ ) . ")";
     $self->_query_dbh($str);
     return \@_;
 }
@@ -274,8 +297,8 @@ sub _prepare_record {
     my ( $self, $key, $ref ) = @_;
     my %hash;
     tie %hash, 'Objects::Collection::ActiveRecord', hash => $ref;
-    if ( ref($self->_sub_ref) eq 'CODE') {
-        return $self->_sub_ref()->($key,\%hash)
+    if ( ref( $self->_sub_ref ) eq 'CODE' ) {
+        return $self->_sub_ref()->( $key, \%hash );
     }
     return \%hash;
 }
@@ -291,7 +314,9 @@ sub GetLastID {
     my $self       = shift;
     my $table_name = $self->_table_name();
     my $field      = $self->_key_field;
-    my $res =  $self->_query_dbh("select max($field)as res from $table_name")->fetchrow_hashref;
+    my $res        =
+      $self->_query_dbh("select max($field)as res from $table_name")
+      ->fetchrow_hashref;
     return $res->{res};
 }
 

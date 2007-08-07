@@ -27,7 +27,7 @@ use Objects::Collection::ActiveRecord;
 use Objects::Collection::Base;
 use Objects::Collection::LazyObject;
 @Objects::Collection::ISA = qw(Objects::Collection::Base);
-$Objects::Collection::VERSION = '0.33';
+$Objects::Collection::VERSION = '0.34';
 attributes qw( _obj_cache );
 
 sub _init {

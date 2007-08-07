@@ -10,3 +10,6 @@ Revision history for Perl extension Objects::Collection.
 0.33  
         - add LazyLoad support
         - add UnionHash
+0.34  
+        - fix 0 for test on defined 
+	- add expressions (<> ) to key names
