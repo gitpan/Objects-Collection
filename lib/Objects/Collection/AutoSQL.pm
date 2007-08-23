@@ -157,7 +157,7 @@ sub _query_dbh {
     my $self  = shift;
     my $query = shift;
     my $dbh   = $self->_dbh;
-    my $sth   = $dbh->prepare($query) or croak $dbh::errstr;
+    my $sth   = $dbh->prepare($query) or croak $dbh::errstr. "\nSQL: $query";
     $sth->execute or croak $dbh::errstr. "\nSQL: $query";
     return $sth;
 }
@@ -185,7 +185,11 @@ sub _store {
         }    #foreach
     }    #while
 }
+=head2 _prepare_where <query hash>
 
+return <where>  expression or undef else
+
+=cut
 sub _prepare_where {
     my $self  = shift;
     my $dbh   = $self->_dbh();
@@ -216,7 +220,7 @@ sub _prepare_where {
                 push @and_where, qq!$key in ($vals)!;
             }
         }
-        push @add_where, " ( " . join( " and ", @and_where ) . " ) ";
+        push @add_where, " ( " . join( " and ", @and_where ) . " ) " if @and_where;
     }
     my $extr_where = join " or ", @add_where if @add_where;
     return $extr_where;
