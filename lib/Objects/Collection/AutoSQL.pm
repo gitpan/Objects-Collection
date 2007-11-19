@@ -197,7 +197,7 @@ sub _prepare_where {
     my @extra_id;
     my @docs;
     foreach (@_) {
-        if ( $_->{id} ) {
+        if ( defined $_->{id} ) {
             push @docs, $_->{id};
         }
         else {

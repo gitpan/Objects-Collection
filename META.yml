@@ -1,6 +1,6 @@
 ---
 name: Objects-Collection
-version: 0.35
+version: 0.36
 author:
   - Zahatski Aliaksandr zag@cpan.org
 abstract: Collections of data or objects.
@@ -10,7 +10,7 @@ resources:
 provides:
   Objects::Collection:
     file: lib/Objects/Collection.pm
-    version: 0.35
+    version: 0.36
   Objects::Collection::ActiveRecord:
     file: lib/Objects/Collection/ActiveRecord.pm
     version: 0.01

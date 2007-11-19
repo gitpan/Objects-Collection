@@ -16,4 +16,5 @@ Revision history for Perl extension Objects::Collection.
 
 0.35
     - return undef if empty  for _prepare_where
-
+0.36 
+    - fix Collection/AutoSQL prepare_where for id ==0
