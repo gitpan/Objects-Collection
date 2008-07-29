@@ -5,9 +5,9 @@
 
 # change 'tests => 1' to 'tests => last_test_to_print';
 
-use Test::More 'no_plan';    #tests => 'noplan';
+#use Test::More 'no_plan';    #tests => 'noplan';
 
-#use Test::More tests =>17 ;
+use Test::More tests =>8 ;
 use Data::Dumper;
 
 BEGIN {

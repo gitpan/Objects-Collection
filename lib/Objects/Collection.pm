@@ -26,8 +26,8 @@ use Data::Dumper;
 use Objects::Collection::ActiveRecord;
 use Objects::Collection::Base;
 use Objects::Collection::LazyObject;
-@Objects::Collection::ISA = qw(Objects::Collection::Base);
-$Objects::Collection::VERSION = '0.36';
+@Objects::Collection::ISA     = qw(Objects::Collection::Base);
+$Objects::Collection::VERSION = '0.37';
 attributes qw( _obj_cache );
 
 sub _init {
@@ -126,6 +126,7 @@ Public method for create objects.
 
 
 =cut
+
 sub create {
     my $self     = shift;
     my $coll_ref = $self->_obj_cache();
@@ -146,7 +147,7 @@ sub fetch_object {
     if ( my $item_refs = $self->fetch_objects($id) ) {
         $res = $item_refs->{$id};
     }
-    return $res
+    return $res;
 }
 
 =head2 fetch_objects(ID1 [, ID2, ...])
@@ -159,49 +160,46 @@ Parametrs:
 
 
 =cut
+
 sub fetch_objects {
     my $self = shift;
     my (@ids) =
       map { ref($_) ? $_ : { id => $_ } } grep { defined $_ } @_;
     return unless @ids;
     my $coll_ref = $self->_obj_cache();
-    my (@fecth) = grep {!exists $_->{id} or !exists $coll_ref->{ $_->{id} } }  @ids;
-        if (
-            scalar(@fecth)
-            && (
-                my $results = $self->_fetch(@fecth)
-        )
-          )
-        {
+    my (@fecth) =
+      grep { !exists $_->{id} or !exists $coll_ref->{ $_->{id} } } @ids;
+    if ( scalar(@fecth)
+        && ( my $results = $self->_fetch(@fecth) ) )
+    {
 
-            map {
-                my $ref = $self->_prepare_record( $_, $results->{$_} );
-                $coll_ref->{$_} = $ref if ref($ref);
-              }
-              #filter aleady loaded objects
-              grep {
-                !exists $coll_ref->{$_} 
-              }
-              keys %{$results};
-            push @ids, map { { id => $_ } } keys %{$results};
-        }
+        map {
+            my $ref = $self->_prepare_record( $_, $results->{$_} );
+            $coll_ref->{$_} = $ref if ref($ref);
+          }
+
+          #filter aleady loaded objects
+          grep { !exists $coll_ref->{$_} }
+          keys %{$results};
+        push @ids, map { { id => $_ } } keys %{$results};
+    }
     return {
         map { $_->{id} => $coll_ref->{ $_->{id} } }
-          grep { exists $_->{id}  and exists $coll_ref->{ $_->{id} } } @ids
+          grep { exists $_->{id} and exists $coll_ref->{ $_->{id} } } @ids
     };
 }
-
 
 =head2 release_objects(ID1[, ID2, ...])
 
 Release from collection objects with IDs.
 
 =cut
+
 sub release_objects {
     my $self = shift;
     my (@ids) = map { ref($_) ? $_ : { id => $_ } } @_;
     my $coll_ref = $self->_obj_cache();
-    unless ( @ids ) {
+    unless (@ids) {
         my $res = [ map { { id => $_ } } keys %$coll_ref ];
         undef %{$coll_ref};
         return $res;
@@ -230,6 +228,7 @@ or (for 1,2,6 IDs )
     $simple_collection->store_changed(1,2,6);
 
 =cut
+
 sub store_changed {
     my $self      = shift;
     my @store_ids = @_;
@@ -257,6 +256,7 @@ objects ID1,ID2...
 
 
 =cut
+
 sub delete_objects {
     my $self = shift;
     my (@ids) = map { ref($_) ? $_ : { id => $_ } } @_;
@@ -270,12 +270,41 @@ Method for base support lazy load objects from data storage.
 Not really return lazy object.
 
 =cut
+
 sub get_lazy_object {
     my ( $self, $id ) = @_;
-    return new Objects::Collection::LazyObject:: sub {$self->fetch_object($id)};
+    return new Objects::Collection::LazyObject::
+      sub { $self->fetch_object($id) };
 }
 
+=head2
 
+=cut
+
+sub get_changed_id {
+    my $self     = shift;
+    my $coll_ref = $self->_obj_cache();
+    my @changed  = ();
+    while ( my ( $id, $value ) = each %$coll_ref ) {
+        if ( ref($value) eq 'HASH' ) {
+            if ( my $obj = tied $value ) {
+                push @changed, $id if $obj->_changed();
+            }
+            else {
+                push @changed, $id if $value->{_changed};
+            }
+        }
+        else {
+            push @changed, $id if $value->_changed();
+        }
+    }
+    return \@changed
+}
+
+sub list_ids {
+    my $pkg = ref $_[0];
+    croak "$pkg doesn't define an list_ids method";
+}
 1;
 __END__
 

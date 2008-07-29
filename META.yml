@@ -1,6 +1,6 @@
 ---
 name: Objects-Collection
-version: 0.36
+version: 0.37
 author:
   - Zahatski Aliaksandr zag@cpan.org
 abstract: Collections of data or objects.
@@ -10,7 +10,7 @@ resources:
 provides:
   Objects::Collection:
     file: lib/Objects/Collection.pm
-    version: 0.36
+    version: 0.37
   Objects::Collection::ActiveRecord:
     file: lib/Objects/Collection/ActiveRecord.pm
     version: 0.01
@@ -31,6 +31,12 @@ provides:
     version: 0.02
   Objects::Collection::LazyObject:
     file: lib/Objects/Collection/LazyObject.pm
+    version: 0.01
+  Objects::Collection::Memcached:
+    file: lib/Objects/Collection/Memcached.pm
+    version: 0.01
+  Objects::Collection::Mirror:
+    file: lib/Objects/Collection/Mirror.pm
     version: 0.01
 generated_by: Module::Build version 0.2808
 meta-spec:
